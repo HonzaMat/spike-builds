@@ -1,0 +1,196 @@
+# SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
+# SPDX-License-Identifier: CC0-1.0
+
+name: Build RISC-V ISA simulator (Spike)
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+  schedule:
+    - cron: '19 22 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container: quay.io/pypa/manylinux_2_28_x86_64
+    timeout-minutes: 60  # safety
+    outputs:
+      build_date: ${{ steps.build_info.outputs.build_date }}
+      spike_commit: ${{ steps.build_info.outputs.spike_commit }}
+
+    steps:
+      - name: Check out the repository code
+        uses: actions/checkout@v6
+
+      - name: Install build-time dependencies
+        run: |
+          dnf install -y dtc
+
+      - name: Build spike
+        run: |
+          bash checkout_and_build_spike.sh 2>&1 | tee build_log.txt
+
+      - name: Collect build information
+        id: build_info
+        run: |
+          echo "build_date=$(LC_TIME=C date '+%B %-d, %Y')" >> "$GITHUB_OUTPUT"
+          echo "spike_commit=$(cd riscv-isa-sim; git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Package build output
+        run: |
+          bash make_package.sh
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: spike-build
+          path: riscv-isa-sim.tar.gz
+          retention-days: 5
+
+  test:
+    needs: build
+    runs-on: ubuntu-24.04
+    container: ${{ matrix.container }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+          - ubuntu:jammy
+          - ubuntu:noble
+          - ubuntu:resolute
+          - debian:12
+          - debian:13
+          - fedora:44
+          - rockylinux:8
+          - rockylinux:9
+          - almalinux:10
+    steps:
+      - name: Check out the repository code
+        uses: actions/checkout@v6
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: spike-build
+
+      - name: Extract build
+        run: |
+          tar -xzvf riscv-isa-sim.tar.gz -C ~
+
+      - name: Install runtime dependencies
+        run: bash spike_smoketest/install_deps.sh ${{ matrix.container }}
+
+      - name: Run smoke test
+        run: |
+          bash spike_smoketest/run_smoketest.sh ~/riscv-isa-sim/bin/spike
+
+      # TODO: Consider whether we need to actually store the test logs as artifact.
+      # If so, can we store the logs from different distros under distinct names?
+      - name: Store test logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-log
+          path: spike_smoketest/spike_out/**
+          retention-days: 5
+
+  decide_if_release:
+    needs: [build, test]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      proceed: ${{ steps.decide.outputs.proceed }}
+
+    steps:
+      - name: Decide if to make a release
+        id: decide
+        # TODO: Temporarily run the build & release every day during the development
+        # phase. This is to verify the stability of the process.
+        # After the development finishes, the builds will continue to run every day
+        # but a durable release will only be created once a week.
+
+        run: |
+          event_name="${{ github.event_name }}"
+
+          echo "Workflow trigger: $event_name"
+
+          if [ "$event_name" = "schedule" ]; then
+            echo "Will make a release."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Will not make a release."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+        # run: |
+        #   day_of_week="$(date +%u)"
+        #   event_name="${{ github.event_name }}"
+        #
+        #   echo "Workflow trigger: $event_name"
+        #   echo "Day of week: $day_of_week (7 = Sunday)"
+        #
+        #   if [ "$event_name" = "schedule" ] && [ "$day_of_week" -eq 7 ]; then
+        #     echo "Will make a release."
+        #     echo "proceed=true" >> "$GITHUB_OUTPUT"
+        #   else
+        #     echo "Will not make a release."
+        #
+        #     if [ "$event_name" != "schedule" ]; then
+        #       echo "Reason: the workflow was not triggered by schedule (the trigger was: $event_name)."
+        #     elif [ "$day_of_week" -ne 7 ]; then
+        #       echo "Reason: Today is not Sunday."
+        #     fi
+        #
+        #     echo "proceed=false" >> "$GITHUB_OUTPUT"
+        #   fi
+
+  release:
+    needs: [build, test, decide_if_release]
+    if: ${{ needs.decide_if_release.outputs.proceed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      # Write permissions are needed to create a tag
+      contents: write
+
+    steps:
+
+      - name: Get release date string
+        id: date
+        run: echo "value=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the repository code
+        uses: actions/checkout@v6
+      - name: Create tag
+        env:
+          TAG: ${{ steps.date.outputs.value }}
+        run: |
+          git tag "$TAG" "${{ github.sha }}"
+          git push origin "$TAG"
+
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: spike-build
+          path: dist
+
+      - name: Prepare release notes
+        run: |
+          bash generate_release_notes.sh \
+            "${{ needs.build.outputs.build_date }}" \
+            "${{ needs.build.outputs.spike_commit }}" \
+            > release_notes.md
+
+      - name: Create release and attach the assets
+        uses: softprops/action-gh-release@v3
+        with:
+          name: "Spike ${{ steps.date.outputs.value }}"
+          files: dist/riscv-isa-sim.tar.gz
+          body_path: release_notes.md
+          tag_name: ${{ steps.date.outputs.value }}
+          fail_on_unmatched_files: true
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
