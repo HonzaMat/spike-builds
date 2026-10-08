@@ -53,7 +53,7 @@ riscv-isa-sim/bin/spike --help
 
 ## How it works
 
-The automated process for Spike builds
+The automated process build system for Spike works this way:
 
 1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered that handles the following steps.
 
