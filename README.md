@@ -53,7 +53,7 @@ riscv-isa-sim/bin/spike --help
 
 ## How it works
 
-1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered to build Spike.
+1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered in this repository to build Spike.
 
 2) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions.
 Docker image [`manylinux_2_28`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based) from the _PyPA project_ is used for this purpose.
@@ -74,7 +74,7 @@ x86-64 Linux distributions based on glibc >= 2.28. Per the documentation of the
 - Fedora 29+
 - RHEL / Rocky / AlmaLinux 8+
 
-If you notice any problems with compatibility, please open
+If you run into any compatibility problems, please open
 an [issue](https://github.com/HonzaMat/spike-builds/issues).
 
 
