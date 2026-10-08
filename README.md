@@ -53,9 +53,11 @@ riscv-isa-sim/bin/spike --help
 
 ## How it works
 
-1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered in this repository to build Spike.
+The automated process for Spike builds
 
-2) Source code of Spike is taken from the tip of the `master` branch of the [Spike's repository](https://github.com/riscv-software-src/riscv-isa-sim).
+1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered that handles the following steps.
+
+2) Source code of Spike is downloaded from the tip of the `master` branch of the [Spike's repository](https://github.com/riscv-software-src/riscv-isa-sim).
 
 3) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions.
 Docker image [`manylinux_2_28`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based) from the _PyPA project_ is used for this purpose.
