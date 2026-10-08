@@ -56,8 +56,7 @@ riscv-isa-sim/bin/spike --help
 1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered to build Spike.
 
 2) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions.
-[`Manylinux_2_28_x86_64`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based)
-Docker image from the _PyPA project_ is used for this purpose.
+Docker image [`manylinux_2_28_x86_64`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based) from the _PyPA project_ is used for this purpose.
 
 3) The resulting Spike build is then tested on multiple Linux distributions using a short [smoke test](https://github.com/HonzaMat/spike-builds/tree/main/spike_smoketest).
 
