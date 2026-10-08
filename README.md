@@ -1,6 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
-SPDX-License-Identifier: CC0-1.0
+SPDX-License-Identifier: MIT
 -->
 
 # Binary builds of the RISC-V ISA Simulator
@@ -68,7 +68,7 @@ the 3-clause BSD License. See the
 in the Spike's repository.
 
 The components of the automated build system in this repository are, with a few
-exceptions, published under the terms of the CC0-1.0 license.
+exceptions, published under the terms of the MIT license.
 
 ## Submitting fixes or suggestions
 

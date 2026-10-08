@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: MIT
 
 # Perform a smoke-test of Spike: Simulate a small bare-metal RISC-V program
 # that prints text to console using the Spike's HTIF interface.

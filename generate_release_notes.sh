@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: MIT
 
 # Generate release notes text for a release on GitHub.
 
