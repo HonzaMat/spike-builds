@@ -55,7 +55,9 @@ riscv-isa-sim/bin/spike --help
 
 1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered to build Spike.
 
-2) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions. `manylinux_2_28_x86_64`[^2] Docker image from the _PyPA project_ is used for this purpose.
+2) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions.
+[`Manylinux_2_28_x86_64`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based)
+Docker image from the _PyPA project_ is used for this purpose.
 
 3) The resulting Spike build is then tested on multiple Linux distributions using a short [smoke test](https://github.com/HonzaMat/spike-builds/tree/main/spike_smoketest).
 
@@ -64,8 +66,9 @@ riscv-isa-sim/bin/spike --help
 
 ## Supported Linux distributions
 
-The Spike builds should be compatible with all x86-64 Linux distributions
-based on glibc >= 2.28. Per the documentation for manylinux_2_28_x86_64[^2], this includes:
+The Spike builds released in this repository should be compatible with all
+x86-64 Linux distributions based on glibc >= 2.28. Per the documentation of the
+`manylinux_2_28_x86_64` image, this includes:
 
 - Debian 10+
 - Ubuntu 18.10+
@@ -102,5 +105,3 @@ or submit a [pull request](https://github.com/HonzaMat/spike-builds/pulls). Than
 
 
 [^1]: The automated build runs every day to catch any issues or instability. However, a release is only made once a week.
-
-[^2]: https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based
