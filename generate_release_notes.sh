@@ -21,7 +21,7 @@ echo "Spike commit: $spike_commit" >&2
 
 cat <<EOF | tr '\n' ' '
 Portable binary build of [Spike RISC-V ISA simulator](https://github.com/riscv-software-src/riscv-isa-sim)
-for Linux x86-64 platforms. It was automatically created on **$build_date** from Spike's upstream commit
+for Linux x86-64 platforms. Automatically created on **$build_date** from Spike's upstream commit
 **[$spike_commit_short](https://github.com/riscv-software-src/riscv-isa-sim/commit/$spike_commit)**.
 EOF
 
