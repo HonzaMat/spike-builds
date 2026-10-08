@@ -56,7 +56,7 @@ riscv-isa-sim/bin/spike --help
 1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered to build Spike.
 
 2) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions.
-Docker image [`manylinux_2_28_x86_64`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based) from the _PyPA project_ is used for this purpose.
+Docker image [`manylinux_2_28`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based) from the _PyPA project_ is used for this purpose.
 
 3) The resulting Spike build is then tested on multiple Linux distributions using a short [smoke test](https://github.com/HonzaMat/spike-builds/tree/main/spike_smoketest).
 
@@ -67,7 +67,7 @@ Docker image [`manylinux_2_28_x86_64`](https://github.com/pypa/manylinux#manylin
 
 The Spike builds released in this repository should be compatible with all
 x86-64 Linux distributions based on glibc >= 2.28. Per the documentation of the
-`manylinux_2_28_x86_64` image, this includes:
+`manylinux_2_28` image used as the build environment, this includes:
 
 - Debian 10+
 - Ubuntu 18.10+
@@ -76,6 +76,7 @@ x86-64 Linux distributions based on glibc >= 2.28. Per the documentation of the
 
 If you notice any problems with compatibility, please open
 an [issue](https://github.com/HonzaMat/spike-builds/issues).
+
 
 ## Disclaimer
 
@@ -86,6 +87,7 @@ The Spike binaries produced by this project are provided on a **best-effort** ba
 They are provided with the best intentions, but without any guarantees regarding
 compatibility, correctness, or availability.
 
+
 ## Licensing
 
 Spike RISC-V ISA Simulator itself is distributed under the terms of
@@ -95,6 +97,7 @@ in the Spike's repository.
 
 The components of the automated build system in this repository are, with a few
 exceptions, published under the terms of the MIT license.
+
 
 ## Submitting fixes or suggestions
 
