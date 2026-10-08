@@ -1,6 +1,6 @@
 
 # SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: MIT
 
 .PHONY: all disasm download_toolchain clean
 
