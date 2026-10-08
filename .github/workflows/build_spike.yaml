@@ -9,6 +9,7 @@ on:
   pull_request:
   schedule:
     - cron: '19 5 * * *'
+      timezone: "UTC"
 
 jobs:
   build:
@@ -46,13 +47,13 @@ jobs:
         with:
           name: spike-build
           path: riscv-isa-sim.tar.gz
-          retention-days: 5
+          retention-days: 6
 
   test:
     needs: build
     runs-on: ubuntu-24.04
     container: ${{ matrix.container }}
-    timeout-minutes: 15
+    timeout-minutes: 20  # safety
     strategy:
       fail-fast: false
       matrix:
@@ -94,12 +95,12 @@ jobs:
         with:
           name: test-log
           path: spike_smoketest/spike_out/**
-          retention-days: 5
+          retention-days: 6
 
   decide_if_release:
     needs: [build, test]
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 10   # safety
     outputs:
       proceed: ${{ steps.decide.outputs.proceed }}
 
@@ -150,7 +151,7 @@ jobs:
     needs: [build, test, decide_if_release]
     if: ${{ needs.decide_if_release.outputs.proceed == 'true' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 30   # safety
     permissions:
       # Write permissions are needed to create a tag
       contents: write
