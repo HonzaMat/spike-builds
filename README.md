@@ -51,6 +51,30 @@ tar xvf riscv-isa-sim.tar.gz
 riscv-isa-sim/bin/spike --help
 ```
 
+## How it works
+
+1) Every day[^1], a GitHub Actions [workflow](https://github.com/HonzaMat/spike-builds/blob/main/.github/workflows/build_spike.yaml) is automatically triggered to build Spike.
+
+2) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions. `manylinux_2_28_x86_64`[^2] Docker image from the _PyPA project_ is used for this purpose.
+
+3) The resulting Spike build is then tested on multiple Linux distributions using a short [smoke test](https://github.com/HonzaMat/spike-builds/tree/main/spike_smoketest).
+
+4) On Sundays only, and if all of the above passes, a release is published.
+
+
+## Supported Linux distributions
+
+The Spike builds should be compatible with all x86-64 Linux distributions
+based on glibc >= 2.28. Per the documentation for manylinux_2_28_x86_64[^2], this includes:
+
+- Debian 10+
+- Ubuntu 18.10+
+- Fedora 29+
+- RHEL / Rocky / AlmaLinux 8+
+
+If you notice any problems with compatibility, please open
+an [issue](https://github.com/HonzaMat/spike-builds/issues).
+
 ## Disclaimer
 
 This project is not affiliated with the Spike RISC-V ISA Simulator project.
@@ -75,3 +99,8 @@ exceptions, published under the terms of the MIT license.
 If you encounter an issue or have a suggestion for improving the automated build system,
 please feel free to open an [issue](https://github.com/HonzaMat/spike-builds/issues)
 or submit a [pull request](https://github.com/HonzaMat/spike-builds/pulls). Thank you!
+
+
+[^1]: The automated build runs every day to catch any issues or instability. However, a release is only made once a week.
+
+[^2]: https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based
