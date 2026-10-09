@@ -10,12 +10,14 @@ import sys
 from pathlib import Path
 
 ALLOWED_LIBRARIES = {
-    "ld-linux-x86-64.so.2",
-    "libc.so.6",
-    "libgcc_s.so.1",
-    "libm.so.6",
-    "libstdc++.so.6",
-    "linux-vdso.so.1",
+	"linux-vdso.so.1",
+	"libdl.so.2",
+	"libpthread.so.0",
+	"libstdc++.so.6",
+	"libm.so.6",
+	"libgcc_s.so.1",
+	"libc.so.6",
+	"ld-linux-x86-64.so.2",
 }
 
 
