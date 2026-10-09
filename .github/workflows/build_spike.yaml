@@ -32,6 +32,10 @@ jobs:
         run: |
           bash checkout_and_build_spike.sh 2>&1 | tee build_log.txt
 
+      - name: Check shared libraries needed by Spike
+        run: |
+          python3 check_elf_deps.py /opt/riscv-isa-sim/bin/spike
+
       - name: Collect build information
         id: build_info
         run: |
