@@ -32,11 +32,21 @@ jobs:
         run: |
           bash checkout_and_build_spike.sh 2>&1 | tee build_log.txt
 
+      - name: Check shared libraries needed by Spike
+        run: |
+          python3 check_elf_deps.py /opt/riscv-isa-sim/bin/spike
+
       - name: Collect build information
         id: build_info
         run: |
-          echo "build_date=$(LC_TIME=C date '+%B %-d, %Y')" >> "$GITHUB_OUTPUT"
-          echo "spike_commit=$(cd riscv-isa-sim; git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          BUILD_DATE=$(LC_TIME=C date '+%B %-d, %Y')
+          SPIKE_COMMIT=$(cd riscv-isa-sim; git rev-parse HEAD)
+
+          echo "Build date: $BUILD_DATE"
+          echo "Spike commit: $SPIKE_COMMIT"
+
+          echo "build_date=$BUILD_DATE" >> "$GITHUB_OUTPUT"
+          echo "spike_commit=$SPIKE_COMMIT" >> "$GITHUB_OUTPUT"
 
       - name: Package build output
         run: |
