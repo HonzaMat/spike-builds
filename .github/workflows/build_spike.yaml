@@ -31,11 +31,11 @@ jobs:
 
       - name: Build spike
         run: |
-          bash checkout_and_build_spike.sh 2>&1 | tee build_log.txt
+          bash spike_build/checkout_and_build_spike.sh 2>&1 | tee build_log.txt
 
       - name: Check shared libraries needed by Spike
         run: |
-          python3 check_elf_deps.py /opt/riscv-isa-sim/bin/spike
+          python3 spike_build/check_elf_deps.py /opt/riscv-isa-sim/bin/spike
 
 
       - name: Get release date string
@@ -59,7 +59,7 @@ jobs:
 
       - name: Package build output
         run: |
-          bash make_package.sh "${{ steps.build_info.outputs.build_date_ymd }}"
+          bash spike_build/make_package.sh "${{ steps.build_info.outputs.build_date_ymd }}"
 
       - name: Upload the package as artifact
         uses: actions/upload-artifact@v7
@@ -103,11 +103,11 @@ jobs:
               -C ~
 
       - name: Install runtime dependencies
-        run: bash spike_smoketest/install_deps.sh ${{ matrix.container }}
+        run: bash spike_smoketests/install_deps.sh ${{ matrix.container }}
 
       - name: Run smoke test
         run: |
-          bash spike_smoketest/run_smoketest.sh ~/riscv-isa-sim/bin/spike
+          bash spike_smoketests/run_smoketest.sh ~/riscv-isa-sim/bin/spike
 
       # TODO: Consider whether we need to actually store the test logs as artifact.
       # If so, can we store the logs from different distros under distinct names?
@@ -116,7 +116,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: test-log
-          path: spike_smoketest/spike_out/**
+          path: spike_smoketests/spike_out/**
           retention-days: 6
 
   decide_if_release:
@@ -196,7 +196,7 @@ jobs:
 
       - name: Prepare release notes
         run: |
-          bash generate_release_notes.sh \
+          bash various/generate_release_notes.sh \
             "${{ needs.build.outputs.build_date_text }}" \
             "${{ needs.build.outputs.spike_commit }}" \
             > release_notes.md

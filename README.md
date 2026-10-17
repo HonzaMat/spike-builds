@@ -64,7 +64,7 @@ The automated process build system for Spike works this way:
 3) Spike is built in an older Linux environment so that the resulting binaries remain compatible with most current Linux distributions.
 Docker image [`manylinux_2_28`](https://github.com/pypa/manylinux#manylinux_2_28-almalinux-8-based) from the _PyPA project_ is used for this purpose.
 
-4) The resulting Spike build is then tested on multiple Linux distributions using a short [smoke test](https://github.com/HonzaMat/spike-builds/tree/main/spike_smoketest).
+4) The resulting Spike build is then tested on multiple Linux distributions using short [smoke tests](https://github.com/HonzaMat/spike-builds/tree/main/spike_smoketests).
 
 5) On Sundays only, and if all of the above passes, a release is published.
 
