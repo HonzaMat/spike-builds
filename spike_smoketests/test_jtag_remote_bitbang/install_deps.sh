@@ -35,7 +35,7 @@ case "$1" in
 esac
 
 # Download a portable, standalone Python package
-PYTHON_URL="https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.14.8+20261009-x86_64_v2-unknown-linux-gnu-freethreaded-install_only_stripped.tar.gz"
+PYTHON_URL="https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.14.8+20261009-x86_64_v2-unknown-linux-gnu-install_only_stripped.tar.gz"
 EXPECTED_SHA256="1fe9d810548381ddd2bed81a139550d98d6cddb481e3b7470ff99947a5f0feed"
 TAR_GZ_FILE="cpython.tar.gz"
 
