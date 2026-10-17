@@ -27,4 +27,4 @@ git show >$TARGET_DIR/share/spike/git_commit.txt
 
 # Make the package
 cd ..
-tar -czvf riscv-isa-sim-$(BUILD_DATE)-linux-x86-64.tar.gz -C /opt riscv-isa-sim
+tar -czvf riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz -C /opt riscv-isa-sim
