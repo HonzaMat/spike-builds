@@ -87,6 +87,9 @@ jobs:
           - rockylinux:8
           - rockylinux:9
           - almalinux:10
+        test:
+          - test_hello_world
+          - test_jtag_remote_bitbang
     steps:
       - name: Check out the repository code
         uses: actions/checkout@v6
@@ -103,11 +106,11 @@ jobs:
               -C ~
 
       - name: Install runtime dependencies
-        run: bash spike_smoketests/install_deps.sh ${{ matrix.container }}
+        run: bash spike_smoketests/${{ matrix.test }}/install_deps.sh ${{ matrix.container }}
 
       - name: Run smoke test
         run: |
-          bash spike_smoketests/run_smoketest.sh ~/riscv-isa-sim/bin/spike
+          bash spike_smoketests/${{ matrix.test }}/run_test.sh ~/riscv-isa-sim/bin/spike
 
       # TODO: Consider whether we need to actually store the test logs as artifact.
       # If so, can we store the logs from different distros under distinct names?
