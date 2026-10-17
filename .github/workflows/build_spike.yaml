@@ -50,13 +50,13 @@ jobs:
 
       - name: Package build output
         run: |
-          bash make_package.sh
+          bash make_package.sh "${{ steps.build_info.outputs.build_date }}"
 
-      - name: Upload build artifact
+      - name: Upload the package as artifact
         uses: actions/upload-artifact@v7
         with:
           name: spike-build
-          path: riscv-isa-sim.tar.gz
+          path: riscv-isa-sim-${{ steps.build_info.outputs.build_date }}-linux-x86-64.tar.gz
           retention-days: 6
 
   test:
@@ -88,7 +88,9 @@ jobs:
 
       - name: Extract build
         run: |
-          tar -xzvf riscv-isa-sim.tar.gz -C ~
+          tar -xzvf \
+              "riscv-isa-sim-${{ needs.build.outputs.build_date }}-linux-x68-64.tar.gz" \
+              -C ~
 
       - name: Install runtime dependencies
         run: bash spike_smoketest/install_deps.sh ${{ matrix.container }}
@@ -167,16 +169,11 @@ jobs:
       contents: write
 
     steps:
-
-      - name: Get release date string
-        id: date
-        run: echo "value=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
-
       - name: Check out the repository code
         uses: actions/checkout@v6
       - name: Create tag
         env:
-          TAG: ${{ steps.date.outputs.value }}
+          TAG: ${{ needs.build.outputs.build_date }}
         run: |
           git tag "$TAG" "${{ github.sha }}"
           git push origin "$TAG"
@@ -197,10 +194,10 @@ jobs:
       - name: Create release and attach the assets
         uses: softprops/action-gh-release@v3
         with:
-          name: "Spike ${{ steps.date.outputs.value }}"
-          files: dist/riscv-isa-sim.tar.gz
+          name: "Spike ${{ needs.build.outputs.build_date }}"
+          files: dist/riscv-isa-sim-${{ needs.build.outputs.build_date }}-linux-x68-64.tar.gz
           body_path: release_notes.md
-          tag_name: ${{ steps.date.outputs.value }}
+          tag_name: ${{ needs.build.outputs.build_date }}
           fail_on_unmatched_files: true
           generate_release_notes: false
         env:
