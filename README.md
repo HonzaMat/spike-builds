@@ -44,9 +44,11 @@ Find the desired release on the [Releases page](https://github.com/HonzaMat/spik
 Then download and extract it, for example:
 
 ```
-wget https://github.com/HonzaMat/spike-builds/releases/download/<BUILD_DATE>/riscv-isa-sim.tar.gz
+export BUILD_DATE="20261018"
+export URL="https://github.com/HonzaMat/spike-builds/releases/download/${BUILD_DATE}/riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz"
+wget "$URL"
 
-tar xvf riscv-isa-sim.tar.gz
+tar xvf riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz
 
 riscv-isa-sim/bin/spike --help
 ```

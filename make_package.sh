@@ -7,7 +7,13 @@
 
 set -euox pipefail
 
+if [ "$#" -ne 1 ]; then
+    echo "Error: expected exactly one argument - build date in the format YYYYMMDD." >&2
+    exit 1
+fi
+
 TARGET_DIR=/opt/riscv-isa-sim
+BUILD_DATE=$1
 
 mkdir -p $TARGET_DIR/share/spike
 
@@ -21,4 +27,4 @@ git show >$TARGET_DIR/share/spike/git_commit.txt
 
 # Make the package
 cd ..
-tar -czvf riscv-isa-sim.tar.gz -C /opt riscv-isa-sim
+tar -czvf riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz -C /opt riscv-isa-sim

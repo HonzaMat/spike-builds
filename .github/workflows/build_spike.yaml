@@ -17,7 +17,8 @@ jobs:
     container: quay.io/pypa/manylinux_2_28_x86_64
     timeout-minutes: 60  # safety
     outputs:
-      build_date: ${{ steps.build_info.outputs.build_date }}
+      build_date_text: ${{ steps.build_info.outputs.build_date_text }}
+      build_date_ymd: ${{ steps.build_info.outputs.build_date_ymd }}
       spike_commit: ${{ steps.build_info.outputs.spike_commit }}
 
     steps:
@@ -36,28 +37,37 @@ jobs:
         run: |
           python3 check_elf_deps.py /opt/riscv-isa-sim/bin/spike
 
+
+      - name: Get release date string
+        id: date
+        run: echo "value=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
+
       - name: Collect build information
         id: build_info
         run: |
-          BUILD_DATE=$(LC_TIME=C date '+%B %-d, %Y')
+          BUILD_DATE_TEXT=$(LC_TIME=C date '+%B %-d, %Y')
+          BUILD_DATE_YMD=$(LC_TIME=C date '+%Y%m%d')
           SPIKE_COMMIT=$(cd riscv-isa-sim; git rev-parse HEAD)
 
-          echo "Build date: $BUILD_DATE"
+          echo "Build date: $BUILD_DATE_TEXT"
+          echo "Build date YYYYMMDD: $BUILD_DATE_YMD"
           echo "Spike commit: $SPIKE_COMMIT"
 
-          echo "build_date=$BUILD_DATE" >> "$GITHUB_OUTPUT"
+          echo "build_date_text=$BUILD_DATE_TEXT" >> "$GITHUB_OUTPUT"
+          echo "build_date_ymd=$BUILD_DATE_YMD" >> "$GITHUB_OUTPUT"
           echo "spike_commit=$SPIKE_COMMIT" >> "$GITHUB_OUTPUT"
 
       - name: Package build output
         run: |
-          bash make_package.sh
+          bash make_package.sh "${{ steps.build_info.outputs.build_date_ymd }}"
 
-      - name: Upload build artifact
+      - name: Upload the package as artifact
         uses: actions/upload-artifact@v7
         with:
           name: spike-build
-          path: riscv-isa-sim.tar.gz
+          path: riscv-isa-sim-${{ steps.build_info.outputs.build_date_ymd }}-linux-x86-64.tar.gz
           retention-days: 6
+          if-no-files-found: error
 
   test:
     needs: build
@@ -88,7 +98,9 @@ jobs:
 
       - name: Extract build
         run: |
-          tar -xzvf riscv-isa-sim.tar.gz -C ~
+          tar -xzvf \
+              "riscv-isa-sim-${{ needs.build.outputs.build_date_ymd }}-linux-x86-64.tar.gz" \
+              -C ~
 
       - name: Install runtime dependencies
         run: bash spike_smoketest/install_deps.sh ${{ matrix.container }}
@@ -167,16 +179,11 @@ jobs:
       contents: write
 
     steps:
-
-      - name: Get release date string
-        id: date
-        run: echo "value=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
-
       - name: Check out the repository code
         uses: actions/checkout@v6
       - name: Create tag
         env:
-          TAG: ${{ steps.date.outputs.value }}
+          TAG: ${{ needs.build.outputs.build_date_ymd }}
         run: |
           git tag "$TAG" "${{ github.sha }}"
           git push origin "$TAG"
@@ -190,17 +197,17 @@ jobs:
       - name: Prepare release notes
         run: |
           bash generate_release_notes.sh \
-            "${{ needs.build.outputs.build_date }}" \
+            "${{ needs.build.outputs.build_date_text }}" \
             "${{ needs.build.outputs.spike_commit }}" \
             > release_notes.md
 
       - name: Create release and attach the assets
         uses: softprops/action-gh-release@v3
         with:
-          name: "Spike ${{ steps.date.outputs.value }}"
-          files: dist/riscv-isa-sim.tar.gz
+          name: "Spike ${{ needs.build.outputs.build_date_ymd }}"
+          files: dist/riscv-isa-sim-${{ needs.build.outputs.build_date_ymd }}-linux-x86-64.tar.gz
           body_path: release_notes.md
-          tag_name: ${{ steps.date.outputs.value }}
+          tag_name: ${{ needs.build.outputs.build_date_ymd }}
           fail_on_unmatched_files: true
           generate_release_notes: false
         env:
