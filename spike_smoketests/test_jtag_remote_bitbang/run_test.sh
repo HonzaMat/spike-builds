@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
 # SPDX-License-Identifier: MIT
 
-# Perform a smoke-test of Spike: Launch spike an try to communicate with
+# Perform a smoke-test of Spike: Launch spike and try to communicate with
 # its simulated JTAG interface using the remote bitbang protocol.
 
 set -euo pipefail

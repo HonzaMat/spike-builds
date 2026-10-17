@@ -11,7 +11,6 @@ import sys
 import time
 from pathlib import Path
 
-
 SCRIPT_DIR = Path(__file__).parent.resolve()
 INFINITE_LOOP_ELF = (SCRIPT_DIR / "../programs/elf/infinite_loop.elf").resolve()
 
@@ -21,8 +20,8 @@ SPIKE_PORT = 9824
 def _parse_args() -> str:
     parser = argparse.ArgumentParser(
         description=(
-            "This script performs a smoke-test of the Spike's JTAG remote bitbang "
-            "interface by performing few simple JTAG transactions."
+            "This script performs a smoke-test of the Spike's JTAG (remote bitbang) "
+            "interface by trying a few simple JTAG transactions."
         )
     )
     parser.add_argument("spike_bin", type=Path, help="path to the Spike executable")
@@ -39,7 +38,9 @@ def _add_reset_symbol(data: bytearray, trst: bool, srst: bool) -> None:
     data.append(symbol)
 
 
-def _add_clock_cycle(data: bytearray, tms: bool, tdi: bool, sample_tdo: bool = False) -> None:
+def _add_clock_cycle(
+    data: bytearray, tms: bool, tdi: bool, sample_tdo: bool = False
+) -> None:
     # TCK low, TMS and TDI as requested:
     data.append(ord("0") + (2 if tms else 0) + (1 if tdi else 0))
     # Sample TDO
@@ -53,7 +54,6 @@ def _prepare_jtag_operations() -> bytes:
     data_to_send = bytearray()
 
     # Reset the JTAG TAP
-    #_add_reset_symbol(data_to_send, trst=True, srst=False)
     _add_reset_symbol(data_to_send, trst=False, srst=False)
 
     # Transition to the Shift-DR JTAG state
@@ -91,7 +91,9 @@ def _get_spike_cmd(spike_bin: Path) -> list[str]:
     ]
 
 
-def _send_and_receive(spike_host: str, spike_port: int, data_to_send: bytes, num_recv: int, timeout: int) -> bytes:
+def _send_and_receive(
+    spike_host: str, spike_port: int, data_to_send: bytes, num_recv: int, timeout: int
+) -> bytes:
 
     with socket.create_connection((spike_host, spike_port), timeout=timeout) as sock:
         sock.sendall(data_to_send)
@@ -126,7 +128,6 @@ def _response_to_int(response: bytes) -> int:
     return int(bytes(reversed(response)), 2)
 
 
-
 def main() -> int:
     spike_bin = _parse_args()
     spike_cmd = _get_spike_cmd(spike_bin)
@@ -154,12 +155,12 @@ def main() -> int:
     decoded_response = _response_to_int(response)
     print(f"Decoded response: 0x{decoded_response:016x}")
 
-    # The upper 32 bits of the response must be JTAG IDCODE
+    # The lower 32 bits of the response must be JTAG IDCODE
     # used by Spike which is 0xdeadbeef.
     #
     # The upper 32 bits must be all ones. These are the '1' bits
-    # that we shifted into the JTAG chain, which are coming through.
-    if decoded_response != 0xffffffff_deadbeef:
+    # that we shifted into the JTAG chain, which are already coming through.
+    if decoded_response != 0xFFFFFFFF_DEADBEEF:
         print("Error: The response from Spike is unexpected")
         return 1
 
@@ -169,4 +170,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
