@@ -15,4 +15,4 @@ fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-/opt/python/bin/python3 "$script_dir/do_rbb_test.py" "$1"
+/opt/python/bin/python3 -u "$script_dir/do_rbb_test.py" "$1"
