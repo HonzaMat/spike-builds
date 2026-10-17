@@ -144,7 +144,7 @@ jobs:
             echo "proceed=true" >> "$GITHUB_OUTPUT"
           else
             echo "Will not make a release."
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
           fi
 
         # run: |
