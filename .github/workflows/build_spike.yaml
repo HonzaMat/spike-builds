@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
 # SPDX-License-Identifier: MIT
 
-name: Build RISC-V ISA simulator (Spike)
+name: Build Spike
 on:
   push:
     branches:
