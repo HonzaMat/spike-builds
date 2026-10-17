@@ -11,7 +11,7 @@ set -u
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-test_program="$script_dir/test_program/elf/hello.elf"
+test_program="$script_dir/../programs/elf/hello_world.elf"
 expected_file="${script_dir}/expected_output.txt"
 
 if [ "$#" -ne 1 ]; then

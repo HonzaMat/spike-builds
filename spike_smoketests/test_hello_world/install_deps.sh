@@ -5,7 +5,7 @@
 
 # Install the needed dependencies to run & test Spike:
 # - Device tree compiler - runtime dependency of Spike
-# - diff - needed for run_smoketest.sh
+# - Diffutils - needed for the test
 
 set -euo pipefail
 

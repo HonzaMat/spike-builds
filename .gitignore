@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
 # SPDX-License-Identifier: MIT
 
-spike_smoketests/spike_out
-spike_smoketests/test_program/toolchain
-spike_smoketests/test_program/elf/*.o
-
+spike_smoketests/test_hello_world/spike_out
+spike_smoketests/programs/toolchain
+spike_smoketests/programs/elf/*.o
