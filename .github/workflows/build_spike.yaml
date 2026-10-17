@@ -99,7 +99,7 @@ jobs:
       - name: Extract build
         run: |
           tar -xzvf \
-              "riscv-isa-sim-${{ needs.build.outputs.build_date_ymd }}-linux-x68-64.tar.gz" \
+              "riscv-isa-sim-${{ needs.build.outputs.build_date_ymd }}-linux-x86-64.tar.gz" \
               -C ~
 
       - name: Install runtime dependencies
@@ -205,7 +205,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           name: "Spike ${{ needs.build.outputs.build_date_ymd }}"
-          files: dist/riscv-isa-sim-${{ needs.build.outputs.build_date_ymd }}-linux-x68-64.tar.gz
+          files: dist/riscv-isa-sim-${{ needs.build.outputs.build_date_ymd }}-linux-x86-64.tar.gz
           body_path: release_notes.md
           tag_name: ${{ needs.build.outputs.build_date_ymd }}
           fail_on_unmatched_files: true
