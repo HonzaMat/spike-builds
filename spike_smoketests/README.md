@@ -3,20 +3,25 @@ SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
 SPDX-License-Identifier: MIT
 -->
 
-# Spike Smoke Test
+# Spike Smoke Tests
 
-This directory contains a simple smoke test for the Spike RISC-V ISA simulator.
+This directory contains smoke tests for the Spike RISC-V ISA simulator.
 
-The test is run on every automatically generated Spike build as a basic check
-that the simulator is functioning correctly.
+The tests are run on every Spike build as a basic validation that the simulator
+is functioning correctly.
 
-- The `run_smoketest.sh` script runs a small RISC-V bare-metal program `elf/hello.elf` using Spike.
-- The bare-metal program prints text to Spike's output via the Spike's HTIF (Host-Target Interface).
-- The script then compares the program's output with the expected text.
+Currently, there are two tests:
 
-The `hello.elf` test program is intentionally stored in the repository as an ELF binary
-to avoid the need to download a bare-metal RISC-V toolchain and recompile the program
-for every test run.
+- `test_hello_world`: Checks that Spike is able to simulate a simple
+  RISC-V bare-metal program that prints a short message to the standard output
+  using Spike's HTIF (Host-Target Interface).
 
-The source code for `hello.elf` can be found in the `src` folder if you need to inspect,
-troubleshoot, or modify the test.
+- `test_jtag_remote_bitbang`: Verifies Spike's remote bitbang
+  server interface by connecting to it and performing a few JTAG operations.
+
+The bare-metal programs needed for the tests are stored in `programs/elf` directory
+as ELF binaries. This is to avoid the need to download a bare-metal RISC-V toolchain
+and recompile the programs for every test run.
+
+Source code for the programs can be found in the `programs/src` directory.
+
