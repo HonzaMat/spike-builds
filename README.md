@@ -72,7 +72,7 @@ Docker image [`manylinux_2_28`](https://github.com/pypa/manylinux#manylinux_2_28
 ## Supported Linux distributions
 
 The Spike builds released in this repository should work on all
-x86-64 Linux distributions based on `glibc&nbsp;>=&nbsp;2.28`. Per the documentation of the
+x86-64 Linux distributions based on glibc&nbsp;>=&nbsp;2.28. Per the documentation of the
 `manylinux_2_28` image, which serves as the build environment, this includes:
 
 - Debian 10+
