@@ -30,6 +30,7 @@ jobs:
           dnf install -y dtc
 
       - name: Build spike
+        shell: bash  # causes also "set -o pipefail"
         run: |
           bash spike_build/checkout_and_build_spike.sh 2>&1 | tee build_log.txt
 
