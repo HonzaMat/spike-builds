@@ -7,7 +7,12 @@
 
 set -euox pipefail
 
-git clone https://github.com/riscv-software-src/riscv-isa-sim.git --recursive
+git clone https://github.com/riscv-software-src/riscv-isa-sim.git \
+  --recursive \
+  --depth 1 \
+  --recurse-submodules \
+  --shallow-submodules
+
 cd riscv-isa-sim
 
 echo "Current Spike commit:"
