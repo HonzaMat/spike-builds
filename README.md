@@ -13,11 +13,8 @@ The Spike executables are portable and run on a wide range of Linux distribution
 New releases are produced automatically every week and are available on the
 [Releases page](https://github.com/HonzaMat/spike-builds/releases) of this repository.
 
-## 🚧 TODO 🚧
-
-**This project is currently under development.**
-
-The README is incomplete and will be expanded over time.
+By using the pre-built Spike binaries published here instead of building from source,
+you can speed up your CI or other test workflows that rely on Spike.
 
 ## Quick start
 
@@ -54,84 +51,9 @@ $ riscv-isa-sim/bin/spike --help
 
 **Tip: How to get the latest release**
 
-Thanks to the [GitHub REST API](https://docs.github.com/en/rest/releases/releases?apiVersion=2026-03-10),
-it is possible to to obtain the date and URL of the latest release (or a list of all releases)
-in an automated way from your own programs or scripts.
-
-Below are few quick examples.
-
-<detail>
-<summary>Examples for cURL + jq</summary>
-
-```bash
-# Get the latest release date (using curl + jq):
-$ curl -s -L \
-    -H "Accept: application/vnd.github+json" \
-    -H "X-GitHub-Api-Version: 2026-03-10" \
-    https://api.github.com/repos/HonzaMat/spike-builds/releases/latest \
-    | jq -r .tag_name
-20261108
-
-# Get the URL of the latest release (using curl + jq):
-$ curl -s -L \
-    -H "Accept: application/vnd.github+json" \
-    -H "X-GitHub-Api-Version: 2026-03-10" \
-    https://api.github.com/repos/HonzaMat/spike-builds/releases/latest \
-    | jq -r .assets[0].browser_download_url
-https://github.com/HonzaMat/spike-builds/releases/download/20261108/riscv-isa-sim-20261108-linux-x86-64.tar.gz
-
-# Get the dates of all published releases (using curl + jq):
-$ curl -s -L \
-    -H "Accept: application/vnd.github+json" \
-    -H "X-GitHub-Api-Version: 2026-03-10" \
-    https://api.github.com/repos/HonzaMat/spike-builds/releases \
-    | jq -r .[].tag_name
-20261108
-20261101
-20261025
-...
-```
-</detail>
-
-<detail>
-<summary>Example for Python</summary>
-
-```python
-# Get all releases in Python:
-
-from pprint import pprint
-
-import requests
-
-url = "https://api.github.com/repos/HonzaMat/spike-builds/releases"
-headers = {
-    "Accept": "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2026-03-10",
-}
-
-response = requests.get(url, headers=headers, allow_redirects=True)
-response.raise_for_status()
-
-data = response.json()
-all_releases = [
-    {"date": item["tag_name"], "url": item["assets"][0]["browser_download_url"]}
-    for item in data
-]
-
-pprint(all_releases)
-
-# This will output:
-
-# [{'date': '20261108',
-#   'url': 'https://github.com/HonzaMat/spike-builds/releases/download/20261108/riscv-isa-sim-20261108-linux-x86-64.tar.gz'},
-#  {'date': '20261101',
-#   'url': 'https://github.com/HonzaMat/spike-builds/releases/download/20261023/riscv-isa-sim-20261101-linux-x86-64.tar.gz'},
-#  ...
-#  ...
-# ]
-
-```
-</detail>
+If you need to get the latest published release (or a list of all releases) in
+an automated way from your scripts or programs, the GitHub REST API can be used.
+Here are [few examples](github_api_examples.md) how to query the API.
 
 
 ## How it works
