@@ -3,10 +3,6 @@
 # SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
 # SPDX-License-Identifier: MIT
 
-# Install the needed dependencies to run & test Spike:
-# - Device tree compiler - runtime dependency of Spike
-# - diff - needed for run_smoketest.sh
-
 set -euo pipefail
 
 if [ "$#" -ne 1 ]; then
@@ -16,7 +12,7 @@ fi
 
 # Install the required packages:
 # - dtc - runtime dependency of Spike
-# - wget - need to download Python
+# - wget - needed to download Python
 case "$1" in
     "ubuntu:jammy"|"ubuntu:noble"|"ubuntu:resolute"|"debian:12"|"debian:13")
         apt-get update
