@@ -134,45 +134,28 @@ jobs:
     steps:
       - name: Decide if to make a release
         id: decide
-        # TODO: Temporarily run the build & release every day during the development
-        # phase. This is to verify the stability of the process.
-        # After the development finishes, the builds will continue to run every day
-        # but a durable release will only be created once a week.
-
         run: |
+          day_of_week="$(date +%u)"
           event_name="${{ github.event_name }}"
 
           echo "Workflow trigger: $event_name"
+          echo "Day of week: $day_of_week (7 = Sunday)"
 
-          if [ "$event_name" = "schedule" ]; then
+          if [ "$event_name" = "schedule" ] && [ "$day_of_week" -eq 7 ]; then
             echo "Will make a release."
             echo "proceed=true" >> "$GITHUB_OUTPUT"
+
           else
             echo "Will not make a release."
+
+            if [ "$event_name" != "schedule" ]; then
+              echo "Reason: the workflow was not triggered by schedule (the trigger was: $event_name)."
+            elif [ "$day_of_week" -ne 7 ]; then
+              echo "Reason: Today is not Sunday."
+            fi
+
             echo "proceed=false" >> "$GITHUB_OUTPUT"
           fi
-
-        # run: |
-        #   day_of_week="$(date +%u)"
-        #   event_name="${{ github.event_name }}"
-        #
-        #   echo "Workflow trigger: $event_name"
-        #   echo "Day of week: $day_of_week (7 = Sunday)"
-        #
-        #   if [ "$event_name" = "schedule" ] && [ "$day_of_week" -eq 7 ]; then
-        #     echo "Will make a release."
-        #     echo "proceed=true" >> "$GITHUB_OUTPUT"
-        #   else
-        #     echo "Will not make a release."
-        #
-        #     if [ "$event_name" != "schedule" ]; then
-        #       echo "Reason: the workflow was not triggered by schedule (the trigger was: $event_name)."
-        #     elif [ "$day_of_week" -ne 7 ]; then
-        #       echo "Reason: Today is not Sunday."
-        #     fi
-        #
-        #     echo "proceed=false" >> "$GITHUB_OUTPUT"
-        #   fi
 
   release:
     needs: [build, test, decide_if_release]
