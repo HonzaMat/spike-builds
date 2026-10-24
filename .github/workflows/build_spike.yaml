@@ -138,8 +138,8 @@ jobs:
           event_name="${{ github.event_name }}"
           day_of_week="$(date +%u)"
 
-          echo "Workflow trigger: $event_name"
-          echo "Day of week: $day_of_week (7 = Sunday)"
+          echo "Current workflow trigger: $event_name"
+          echo "Current day of week: $day_of_week (7 = Sunday)"
 
           if [ "$event_name" = "schedule" ] && [ "$day_of_week" -eq 7 ]; then
             echo "Will make a release."
@@ -149,7 +149,7 @@ jobs:
             echo "Will not make a release."
 
             if [ "$event_name" != "schedule" ]; then
-              echo "Reason: the workflow was not triggered by schedule (the trigger was: $event_name)."
+              echo "Reason: the workflow was not triggered by schedule."
             elif [ "$day_of_week" -ne 7 ]; then
               echo "Reason: Today is not Sunday."
             fi
