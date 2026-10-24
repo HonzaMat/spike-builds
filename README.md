@@ -43,15 +43,96 @@ Find the desired release on the [Releases page](https://github.com/HonzaMat/spik
 
 Then download and extract it, for example:
 
+```bash
+# Download and extract a specific release:
+$ export BUILD_DATE="20261018"
+$ export URL="https://github.com/HonzaMat/spike-builds/releases/download/${BUILD_DATE}/riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz"
+$ wget "$URL"
+$ tar xvf riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz
+$ riscv-isa-sim/bin/spike --help
 ```
-export BUILD_DATE="20261018"
-export URL="https://github.com/HonzaMat/spike-builds/releases/download/${BUILD_DATE}/riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz"
-wget "$URL"
 
-tar xvf riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz
+**Tip: How to get the latest release**
 
-riscv-isa-sim/bin/spike --help
+Thanks to the [GitHub REST API](https://docs.github.com/en/rest/releases/releases?apiVersion=2026-03-10),
+it is possible to to obtain the date and URL of the latest release (or a list of all releases)
+in an automated way from your own programs or scripts.
+
+Below are few quick examples.
+
+<detail>
+<summary>Examples for cURL + jq</summary>
+
+```bash
+# Get the latest release date (using curl + jq):
+$ curl -s -L \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2026-03-10" \
+    https://api.github.com/repos/HonzaMat/spike-builds/releases/latest \
+    | jq -r .tag_name
+20261108
+
+# Get the URL of the latest release (using curl + jq):
+$ curl -s -L \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2026-03-10" \
+    https://api.github.com/repos/HonzaMat/spike-builds/releases/latest \
+    | jq -r .assets[0].browser_download_url
+https://github.com/HonzaMat/spike-builds/releases/download/20261108/riscv-isa-sim-20261108-linux-x86-64.tar.gz
+
+# Get the dates of all published releases (using curl + jq):
+$ curl -s -L \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2026-03-10" \
+    https://api.github.com/repos/HonzaMat/spike-builds/releases \
+    | jq -r .[].tag_name
+20261108
+20261101
+20261025
+...
 ```
+</detail>
+
+<detail>
+<summary>Example for Python</summary>
+
+```python
+# Get all releases in Python:
+
+from pprint import pprint
+
+import requests
+
+url = "https://api.github.com/repos/HonzaMat/spike-builds/releases"
+headers = {
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2026-03-10",
+}
+
+response = requests.get(url, headers=headers, allow_redirects=True)
+response.raise_for_status()
+
+data = response.json()
+all_releases = [
+    {"date": item["tag_name"], "url": item["assets"][0]["browser_download_url"]}
+    for item in data
+]
+
+pprint(all_releases)
+
+# This will output:
+
+# [{'date': '20261108',
+#   'url': 'https://github.com/HonzaMat/spike-builds/releases/download/20261108/riscv-isa-sim-20261108-linux-x86-64.tar.gz'},
+#  {'date': '20261101',
+#   'url': 'https://github.com/HonzaMat/spike-builds/releases/download/20261023/riscv-isa-sim-20261101-linux-x86-64.tar.gz'},
+#  ...
+#  ...
+# ]
+
+```
+</detail>
+
 
 ## How it works
 
