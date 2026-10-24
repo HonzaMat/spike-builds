@@ -3,7 +3,7 @@ SPDX-FileCopyrightText: 2026 Jan Matyas <info@janmatyas.net>
 SPDX-License-Identifier: MIT
 -->
 
-= Examples: Getting release information via GitHub REST API
+# Examples: Getting release information via GitHub REST API
 
 If you need to automatically fetch the latest released Spike binaries (or get a list
 of all releases) in your scripts or CI jobs, you can use the Github's REST API.
@@ -18,7 +18,7 @@ More details can be found in the [GitHub REST API documentation](https://docs.gi
 Here are few quick examples how you can query that API.
 
 
-== Examples using curl + jq
+## Examples using curl + jq
 
 ```bash
 # Get the latest release date:
@@ -52,7 +52,7 @@ $ curl -s -L \
 ...
 ```
 
-== Example using Python
+## Example using Python
 
 ```python
 from pprint import pprint

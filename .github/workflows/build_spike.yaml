@@ -135,8 +135,8 @@ jobs:
       - name: Decide if to make a release
         id: decide
         run: |
-          day_of_week="$(date +%u)"
           event_name="${{ github.event_name }}"
+          day_of_week="$(date +%u)"
 
           echo "Workflow trigger: $event_name"
           echo "Day of week: $day_of_week (7 = Sunday)"
