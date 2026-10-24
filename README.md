@@ -13,11 +13,8 @@ The Spike executables are portable and run on a wide range of Linux distribution
 New releases are produced automatically every week and are available on the
 [Releases page](https://github.com/HonzaMat/spike-builds/releases) of this repository.
 
-## 🚧 TODO 🚧
-
-**This project is currently under development.**
-
-The README is incomplete and will be expanded over time.
+By using the pre-built Spike binaries published here instead of building from source,
+you can speed up your CI or other test workflows that rely on Spike.
 
 ## Quick start
 
@@ -43,15 +40,21 @@ Find the desired release on the [Releases page](https://github.com/HonzaMat/spik
 
 Then download and extract it, for example:
 
+```bash
+# Download and extract a specific release:
+$ export BUILD_DATE="20261018"
+$ export URL="https://github.com/HonzaMat/spike-builds/releases/download/${BUILD_DATE}/riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz"
+$ wget "$URL"
+$ tar xvf riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz
+$ riscv-isa-sim/bin/spike --help
 ```
-export BUILD_DATE="20261018"
-export URL="https://github.com/HonzaMat/spike-builds/releases/download/${BUILD_DATE}/riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz"
-wget "$URL"
 
-tar xvf riscv-isa-sim-${BUILD_DATE}-linux-x86-64.tar.gz
+**Tip: How to get the latest release**
 
-riscv-isa-sim/bin/spike --help
-```
+If you need to get the latest published release (or a list of all releases) in
+an automated way from your scripts or programs, the GitHub REST API can be used.
+Here are [few examples](github_api_examples.md) how to query the API.
+
 
 ## How it works
 
