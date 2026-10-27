@@ -47,11 +47,13 @@ echo "Spike stdout:"
 echo "-------------"
 cat $script_dir/spike_out/spike_stdout.txt
 
+echo ""
 echo "-------------"
 echo "Spike stderr:"
 echo "-------------"
 cat $script_dir/spike_out/spike_stderr.txt
 
+echo ""
 echo "-------------"
 echo "Test result:"
 echo "-------------"
