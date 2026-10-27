@@ -114,16 +114,6 @@ jobs:
         run: |
           bash spike_smoketests/${{ matrix.test }}/run_test.sh ~/riscv-isa-sim/bin/spike
 
-      # TODO: Consider whether we need to actually store the test logs as artifact.
-      # If so, can we store the logs from different distros under distinct names?
-      - name: Store test logs
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: test-log
-          path: spike_smoketests/spike_out/**
-          retention-days: 6
-
   decide_if_release:
     needs: [build, test]
     runs-on: ubuntu-24.04
