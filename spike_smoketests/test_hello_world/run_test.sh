@@ -42,6 +42,20 @@ mkdir -p "$script_dir/spike_out"
 
 exit_status=$?
 
+echo "-------------"
+echo "Spike stdout:"
+echo "-------------"
+cat $script_dir/spike_out/spike_stdout.txt
+
+echo "-------------"
+echo "Spike stderr:"
+echo "-------------"
+cat $script_dir/spike_out/spike_stderr.txt
+
+echo "-------------"
+echo "Test result:"
+echo "-------------"
+
 if [ "$exit_status" -ne 0 ]; then
     echo "Error: '$spike_bin' exited with status $exit_status, expected 0." >&2
     exit 1
